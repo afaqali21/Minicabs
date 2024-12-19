@@ -1,0 +1,197 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  font-family: 'Montserrat', sans-serif !important;
+
+  color: #000;
+  background: #fff;
+}
+.clr-btn{
+  background-color: #01337C !important;
+  color: #fff !important;                 
+}
+.hero{
+  background-image: url("/header-img/banner-image.jpg");
+  background-repeat: no-repeat;  
+  background-size: cover;
+  height: 700px;
+  background-position: center;
+}
+.simple-boking{
+  background-image: url("/header-img/banner-image.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 230px;
+  background-position: center;
+}
+.selct-icon{
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0px;      
+  justify-content: center;
+  align-items: center;
+  gap: 8.283px;
+  flex: 1 0 0;
+  align-self: stretch;
+  border: 1px solid #AAAFB6;
+  
+  
+}
+
+.cursorily {
+  cursor: pointer;
+}
+
+.hov:hover {
+  color: #000;
+}
+
+.ico-size {
+  font-size: 16px;
+}
+
+.ico-size-month {
+  font-size: 26px !important;
+  line-height: 26px !important;
+}
+
+.ico-size-large {
+  font-size: 40px !important;
+  line-height: 30px;
+}
+
+
+
+.active-content {
+  color: #193e89; /* Change the color for active state */
+  font-weight: 800;
+  border: 2px solid  #193d89;
+}
+
+.inactive-content {
+  color: black; /* Default color for inactive state */
+  border-color: #7d7d7d;
+}
+
+
+/* Styles for depth effect */
+.depth-effect {
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+/* Styles for active div */
+.active-cars {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid #193d89;
+}
+.bg-blue{
+  background-image: url("/booking-engine-img/bg-tick.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  width: 40px;
+  height: 40px;
+}
+
+.fotr-blue{
+  display: block;
+    z-index: 2;
+    position: absolute;
+    right: 0%;
+    top: -20%;
+    bottom: 0%;
+    
+}
+.fotr-blue::after{
+  content: " ";
+    position: absolute;
+    display: block;
+    width: 15%;
+    height: 100%;
+    left: 2px;
+    top: 0;
+    z-index: -1;
+    background: #01337C;
+    -ms-transform: skew(-30deg, 0deg);
+    -webkit-transform: skew(-30deg, 0deg);
+    transform: skew(-35deg, 0deg) translateX(-48%);
+}
+.datetime-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 1rem;
+}
+.datetime-picker-container {
+  
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #eee;
+  background-color: #fff;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+}
+
+button {
+  background-color: #f3f3f3;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+            
+/* Custom styles for separating date and time picker */
+.flatpickr-calendar {
+  display: flex ;
+  flex-direction: row ; /* Display date and time side by side */
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flatpickr-time {                               
+  margin-left: 20px; /* Adjust spacing as needed */
+}
+
+/* Additional custom styles */
+.custom-date-picker {                       
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+@media (min-width: 320px) and (max-width: 768px) {
+  .fotr-blue{
+    position: unset;
+  }
+  .fotr-blue::after{
+    position: unset;
+  }
+}
