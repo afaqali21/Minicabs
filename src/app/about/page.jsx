@@ -83,7 +83,7 @@ const page = () => {
     <div class="mx-auto max-w-screen-xl">
       <div class="text-center py-16">
         <h2>WHY BOOK WITH MINICABS.CO.UK</h2>
-        <p class="pb-10">At Minicabs we know that we offer the very best London minicab service, a claim that's <br></br>
+        <p class="pb-10">At Minicabs we know that we offer the very best London minicab service, a claim that&apos;s <br></br>
           backed up by a huge number of our passengers, who consistenly use us due to our <br></br>
           promptness, politeness and great value for money</p>
         <div class="flex justify-evenly px-16 py-5">
