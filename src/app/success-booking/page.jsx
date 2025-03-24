@@ -1,47 +1,39 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import VehicleDetails from '../component/vehicle-detail-sucess';
 import BookingDetails from '../component/booking-detail-success';
 import JourneyPS from '../component/journeyPS-success';
 import SidebarSuccess from '../component/sidebar-success';
-
+                
 
 const Successbooking = () => {
-  const router = useRouter();
-  const { pickup, destination, arrived, landed, flightno, meet } = router.query;
   return (
     <div>                          
       <main className=" min-h-screen">
-        <div className='simple-boking'>
-          <div className=' relative container mx-auto'>
-            <div className="absolute top-28 left-5 mx-7">
+        <div className='simple-boking'>      
+          <div className=' relative container mx-auto'>  
+            <div className="absolute top-28 left-5 mx-7">      
               <h2 className="text-4xl text-white">Book a Ride</h2>
               <p className="text-white text-lg">Select a ride type according to your needs</p>
             </div>
-          </div>
+          </div>                       
         </div>
-        <div className='container mx-auto '>
+        <div className='container mx-auto '>                 
           <div className='block md:flex md:mx-10 '>
             <div className='w-full md:w-[70%] pr-0 md:pr-8'>    
               <VehicleDetails />         
               <BookingDetails />                
               <JourneyPS 
-                pickup={pickup}
-                destination={destination}
-                arrived={arrived}
-                landed={landed}
-                flightno={flightno}
-                meet={meet}
+                     
               />
             </div>
             <div className='relative'>
               <div className='sticky top-0 pb-10'>
-                <SidebarSuccess />
-              </div>
+                <SidebarSuccess />           
+              </div>                      
             </div>
-          </div>
-        </div>
+          </div>             
+        </div>          
       </main>
     </div>
   )

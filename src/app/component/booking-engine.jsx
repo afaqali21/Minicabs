@@ -16,12 +16,12 @@ const Booking = () => {
   const [dateTime1, setDateTime1] = useState(null); // First datetime picker
   const [dateTime2, setDateTime2] = useState(null); // Second datetime picker for 'return'
 
-  const countries = [
+  const countries = [        
     'London Heathrow Airport Terminal 1',
-    'London Heathrow Airport Terminal 2',
+    'London Heathrow Airport Terminal 2',                   
     'London Heathrow Airport Terminal 3',
     'London Heathrow Airport Terminal 4',
-    'London Heathrow Airport Terminal 5',
+    'London Heathrow Airport Terminal 5',                                
     'London Gatwick North Airport',
     'London Gatwick South Airport',
     'London Luton Airport',

@@ -5,14 +5,14 @@ const passengerDetails = ({ onPassengerChange }) => {
      // States to store input values
      const [name, setName] = useState('');
      const [email, setEmail] = useState('');
-     const [mobile, setMobile] = useState('');
+     const [mobile, setMobile] = useState('');  
  
      // Handle input changes
      const handleInputChange = (e) => {
          const { id, value } = e.target;
          if (id === 'name') setName(value);
          if (id === 'email') setEmail(value);
-         if (id === 'mobile') setMobile(value);
+         if (id === 'mobile') setMobile(value);                        
      };
  
      // Effect to notify parent of changes
@@ -50,9 +50,9 @@ const passengerDetails = ({ onPassengerChange }) => {
         <li className="block xl:flex items-center py-2">
             <img className='mx-auto' src="booking-engine-img/register.png" alt="" />
             <p className="ps-3 sm:text-sm lg:text-base">Register</p>
-        </li>
+        </li>   
         </Link>
-    </div>
+    </div>     
 </ul>
 <div>
     <div className="relative mt-4">
@@ -87,8 +87,9 @@ const passengerDetails = ({ onPassengerChange }) => {
          peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
          peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Mobile number</label>
         </div>
-    </div>
-</div>
+    </div>           
+</div>               
+  
 </div>
 </>
    )

@@ -62,8 +62,8 @@ const SelectService = ({ onCarSelect }) => {
                 {activeIndex === index && (
                   <div className="absolute right-0 bottom-0  bg-blue ">
 
-                    <img src='/booking-engine-img/check 1.png' className='bottom-0 right-0 absolute' width={25} />
-                  </div>
+                    <img src='/booking-engine-img/check 1.png' className='bottom-0 right-0 absolute pb-1 pr-1' width={20} />
+                  </div>        
                 )}
               </div>
             ))}

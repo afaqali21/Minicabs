@@ -1,12 +1,7 @@
 import React from 'react'
-import { useRouter } from 'next/router';
 
 const bookingdetailsuccess = () => {
-    const router = useRouter();
-    const{
-     pickup = '',
-    destination = '',
-    }= router.query;
+  
    
     return (
         <div>

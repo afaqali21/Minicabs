@@ -17,7 +17,7 @@ const Booking = () => {
   const [selectedDateTime, setSelectedDateTime] = useState(null);
 
 
-  const handleItemClick = (itemId) => {
+  const handleItemClick = (itemId) => {                
     setActiveItem(itemId);
   };
   const handleRadioClick = (radioType) => {

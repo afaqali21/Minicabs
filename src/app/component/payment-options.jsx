@@ -13,26 +13,26 @@ const paymentoptions = ({ onItemClick }) => {
         setActiveItem(itemId);
         onItemClick(itemId);
     };
-    return (
-        <>
+    return (         
+        <>              
             <div className='container mx-auto'>
                 <div className='bg-colorGrey px-6 py-8 my-7'>
                     <h2 className='text-hColor text-2xl pb-4'>Select Payment Options</h2>
                     <ul className="flex items-end py-3">
                         <li
                             className={` ${activeItem === 'cash' ? 'active-content' : 'inactive-content'
-                                } selct-icon rounded-l bg-white border-2 text-center`}
+                                } selct-icon rounded-l bg-white border-2 text-center `}          
                             id="cash"
                             onClick={() => handleItemClick('cash')}
                         >
                             <div className={` ${activeItem === 'cash' ? '' : ''}`}>
                                 <img src={activeItem === 'cash' ? '/booking-engine-img/cash-active.png' : '/booking-engine-img/cash.png'} alt="" />
                                 <p>Cash</p>
-                            </div>
+                            </div>          
                         </li>
                         <li
                             className={` ${activeItem === 'card' ? 'active-content' : 'inactive-content'
-                                } selct-icon bg-white border-2 text-center`}
+                                } selct-icon bg-white border-2 text-center`}     
                             id="card"
                             onClick={() => handleItemClick('card')}
                         >

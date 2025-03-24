@@ -29,8 +29,8 @@ const journeyps = ({ pickup, destination, arrived, landed, flightno, meet }) => 
                             </div>
                         </div>
                     </div>
-                    <div className='grid grid-cols-4 pt-6'>
-                        <div className=''>
+                    <div className='grid grid-cols-4 pt-6'>                                  
+                        <div className=''>              
                             <p className='text-hColor'>Arriving From</p>
                             <p className='text-hColor font-semibold pb-4'>{arrived}</p>
                         </div>

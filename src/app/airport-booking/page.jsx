@@ -92,42 +92,41 @@ const handleflightChange = (data) => {
     // };
 
     // Navigate to the success page
-    router.push({
-        pathname: '/success-booking',
-        query: {
-          pickup: bookingData.pickup || '',
-          destination: bookingData.destination || '',
-          // pickup: bookingData.pickup,
-          // destination: bookingData.destination,
-          // arrived: flightDetails.arrived,
-          // landed: flightDetails.landed,
-          // flightno: flightDetails.flightno,       
-          // meet: flightDetails.meet,
-        },
-    });   
-};      
+      // Construct the URL for navigation
+      const queryParams = new URLSearchParams({
+        pickup: bookingData.pickup,
+        destination: bookingData.destination,
+        arrived: flightDetails.arrived,
+        landed: flightDetails.landed,
+        flightno: flightDetails.flightno,
+        meet: flightDetails.meet || '', // Add a default value if optional
+    }).toString();
+
+    // Navigate to the success page
+    router.push(`/success-booking?${queryParams}`);  
+};                                  
   return (
-    <div>         
+    <div>                                
       <main className=" min-h-screen">         
         <div className='simple-boking'>
-          <div className=' relative container mx-auto'>
-            <div className="absolute top-28 left-5 mx-7">
+          <div className=' relative container mx-auto'>    
+            <div className="absolute top-28 left-5 mx-7">      
               <h2 className="text-4xl text-white">Book a Ride</h2>
               <p className="text-white text-lg">Select a ride type according to your needs</p>
             </div>
-          </div>
-
-        </div>
-        <div className='container mx-auto '>  
-          <div className='block md:flex md:mx-10 '>
-            <div className='w-full md:w-[70%] pr-0 md:pr-8'>
-              <Simplebooking onSave={handleSaveBookingData} />
-              <Selectservice onCarSelect={handleCarSelection} />
+          </div>                            
+                         
+        </div>                                                             
+        <div className='container mx-auto '>                             
+          <div className='block md:flex md:mx-10 '>     
+            <div className='w-full md:w-[70%] pr-0 md:pr-8'>                     
+              <Simplebooking onSave={handleSaveBookingData} />                    
+              <Selectservice onCarSelect={handleCarSelection} />              
               <FlightDetail onFlightchange={handleflightChange}/>                       
               <Paymentoptions onItemClick={handleItemClick} />
               <Passengerdetails  onPassengerChange={handlePassengerDetailsChange}/>
             </div>      
-            <div className='relative'>   
+            <div className='relative'>            
               <div className='sticky top-0 pb-10'>
                 <SidebarForm bookingData={bookingData} selectedCar={selectedCar} selectedData={selectedData}  onSubmit={handleSubmit} />
               </div>
