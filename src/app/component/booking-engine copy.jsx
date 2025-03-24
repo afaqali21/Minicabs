@@ -13,24 +13,24 @@ const Booking = () => {
 
   const [isDivVisible, setDivVisibility] = useState(false);
   const [inputValue, setInputValue] = useState('ASAP');
-  const [open, setOpen] = useState(false);
-  const [selectedDateTime, setSelectedDateTime] = useState(null);
-
-
-  const handleItemClick = (itemId) => {                
+  const [open, setOpen] = useState(false);                    
+  const [selectedDateTime, setSelectedDateTime] = useState(null);                            
+                                                      
+    
+  const handleItemClick = (itemId) => {                         
     setActiveItem(itemId);
-  };
+  };                       
   const handleRadioClick = (radioType) => {
     if (radioType === 'return') {
       // Create a new field object and add it to the fields array
       const newField = { name: '' };
       setFields([...fields, newField]);
-
-      // Set the selected radio to 'oneway'
-      setSelectedRadio('return');
+           
+      // Set the selected radio to 'oneway'          
+      setSelectedRadio('return');                            
     } else if (radioType === 'oneway') {
-      // Clear the fields array and reset the selected radio to 'return'
-      setFields([]);
+      // Clear the fields array and reset the selected radi         o to 'return'
+      setFields([]);                 
       setSelectedRadio('oneway');
     }
   };
