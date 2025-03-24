@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import Link from 'next/link';
-const paymentoptions = ({ onItemClick }) => {
+const Paymentoptions = ({ onItemClick }) => {
     const [activeItem, setActiveItem] = useState('cash');
     const [isVisible, setIsVisible] = useState(false);
 
@@ -70,4 +70,4 @@ const paymentoptions = ({ onItemClick }) => {
     )
 }
 
-export default paymentoptions
+export default Paymentoptions

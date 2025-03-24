@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-const passengerDetails = ({ onPassengerChange }) => {
+const PassengerDetails = ({ onPassengerChange }) => {
      // States to store input values
      const [name, setName] = useState('');
      const [email, setEmail] = useState('');
@@ -95,4 +95,4 @@ const passengerDetails = ({ onPassengerChange }) => {
    )
 }
 
-export default passengerDetails
+export default PassengerDetails

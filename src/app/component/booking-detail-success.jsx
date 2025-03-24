@@ -1,6 +1,6 @@
 import React from 'react'
 
-const bookingdetailsuccess = () => {
+const Bookingdetailsuccess = () => {
   
    
     return (
@@ -41,4 +41,4 @@ const bookingdetailsuccess = () => {
     )
 }
 
-export default bookingdetailsuccess
+export default Bookingdetailsuccess

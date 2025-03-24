@@ -1,6 +1,6 @@
 import React from 'react'
 
-const journeyps = ({ pickup, destination, arrived, landed, flightno, meet }) => {
+const Journeyps = ({ pickup, destination, arrived, landed, flightno, meet }) => {
   
     return (
         
@@ -82,4 +82,4 @@ const journeyps = ({ pickup, destination, arrived, landed, flightno, meet }) => 
     )
 }
 
-export default journeyps
+export default Journeyps

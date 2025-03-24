@@ -1,6 +1,6 @@
 import React from 'react'
 
-const vehicleDetailSucess = () => {
+const VehicleDetailSucess = () => {
     return (
         <div>
             <div className='container mx-auto'>
@@ -49,4 +49,4 @@ const vehicleDetailSucess = () => {
     )
 }
 
-export default vehicleDetailSucess
+export default VehicleDetailSucess
