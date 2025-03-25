@@ -15,11 +15,11 @@ export default function Navbar() {
           <div className="block md:flex items-center md:space-x-5">
             <div className='flex items-center space-x-4 px-3'>
               <Image src="/header-img/phone-icon.png" alt='minicab-phone' width={30} height={10} />
-              <Link href="tel:5541251234"><p className='text-[#737373] text-lg font-bold'>Call: <br /> (555) 412-1234</p></Link>
+              <Link href="tel:5541251234"><p className='text-[#737373] text-md font-bold'>Call: <br /> (555) 412-1234</p></Link>
             </div>
             <div className='flex items-center space-x-4 px-3'>
               <Image src="/header-img/whatsapp-icon.png" alt='minicab-phone' width={30} height={50} />
-              <Link href="tel:5541251234"> <p className='text-[#737373] text-lg font-bold'>Whatsapp <br /> (555) 412-1234</p></Link>
+              <Link href="tel:5541251234"> <p className='text-[#737373] text-md font-bold'>Whatsapp <br /> (555) 412-1234</p></Link>
             </div>
             <div className='px-3'>
               <Link href="/"><Image src="/header-img/trustpilot.png" alt='trustpilot-icon' width={240} height={200} /></Link>

@@ -12,9 +12,9 @@ export default function Footer() {
           <div className="w-full md:w-3/5  bg-colorBlue fotr-blue">
             <div className="mx-20 py-6 md:py-0 md:my-5 ">
               <div className="block md:flex  ">
-                <img className="w-1/2 md:w-full h-full mx-auto" src="/footer-img/logo.png" alt="" />
+                <img className="w-1/2 md:w-3/4 h-full mx-auto" src="/footer-img/logo.png" alt="" />
                 <div className="hidden md:block border-r-2 border-[#1053BB] h-20 ml-10 mr-7 mt-3"></div>
-                <p className="text-white py-5 md:py-0 md:mb-3">offering a Minicasb service since 1996. Our service
+                <p className="text-white py-5 md:py-0 md:mb-3 text-md">offering a Minicasb service since 1996. Our service
                   is down to few things that we regard to be extremly
                   important, we always strive to offer the best value
                   for money to all our passengers.</p>
@@ -76,7 +76,7 @@ export default function Footer() {
               <p className="text-sm text-[#88909B]"> FAQS</p>
             </div>
             <div>
-              <p className="text-sm text-[#88909B]">Copyright © 2023 Minicabs.co.uk- -All Right Reserved</p>
+              <p className="text-sm text-[#88909B]">Copyright © 2025 Minicabs.co.uk- -All Right Reserved</p>
             </div>
             <div>
               <img className="mx-auto" src="/footer-img/payment-options.png" alt="" />

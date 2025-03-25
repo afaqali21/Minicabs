@@ -186,7 +186,17 @@ button {
   border-radius: 5px;
   border: 1px solid #ddd;
 }
-
+input.flatpickr.flatpickr-datetime.flatpickr-input{
+  border: 2px solid #737373;
+    margin-right: 10px;
+}
+input.flatpickr.flatpickr-datetime.flatpickr-input.active{
+  border: 2px solid #737373;
+  margin-right: 10px;
+}
+.datetime-picker-container.jsx-63b4b123b885f6ae{
+  width: 350px !important;
+}
 @media (min-width: 320px) and (max-width: 768px) {
   .fotr-blue{
     position: unset;

@@ -83,6 +83,7 @@ const DateTimeSelector = ({ value, onChange }) => {
           <Flatpickr
             value={selectedDateTime}
             onChange={handleDateChange}
+            placeholder='Date Time'
             options={{
               enableTime: true,
               dateFormat: 'Y-m-d H:i',

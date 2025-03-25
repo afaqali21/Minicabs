@@ -1,6 +1,6 @@
 import React from 'react'
 import Rating from '../component/rating';
-const sidebarsuccess = () => {
+const Sidebarsuccess = () => {
   const initialRating = 3;
   return (
     <div>
@@ -116,4 +116,4 @@ const sidebarsuccess = () => {
   )
 }
 
-export default sidebarsuccess
+export default Sidebarsuccess
