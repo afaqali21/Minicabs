@@ -89,7 +89,7 @@ const DateTimeSelector = ({ value, onChange }) => {
               dateFormat: 'Y-m-d H:i',
               time_24hr: true,
             }}
-            className="flatpickr flatpickr-datetime"
+            className="flatpickr flatpickr-datetime "
           />
           <button onClick={handleOkClick} className="ok-button">
             OK
@@ -127,7 +127,7 @@ const DateTimeSelector = ({ value, onChange }) => {
           background: white;
           border-radius: 8px;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-          width: 300px;
+          width: 350px;
           text-align: center;
         }
 
