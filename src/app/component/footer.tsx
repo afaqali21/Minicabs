@@ -59,12 +59,12 @@ export default function Footer() {
             </div>
           </div>
           <div className="flex items-center justify-center mt-6">
-            <img src="/footer-img/facebook-icon.png" alt="" />
-            <img src="/footer-img/twitter-icon.png" alt="" />
-            <img src="/footer-img/instagram-icon.png" alt="" />
-            <img src="/footer-img/linkedin-icon.png" alt="" />
-            <img src="/footer-img/youtube-icon.png" alt="" />
-            <img src="/footer-img/whatsapp-icon.png" alt="" />
+           <a href="https://www.facebook.com/minicabs.co.uk/"> <img src="/footer-img/facebook-icon.png" alt="" /></a>
+           <a href="https://twitter.com/Minicabs_uk"> <img src="/footer-img/twitter-icon.png" alt="" /></a>
+           <a href="https://www.instagram.com/minicabs.co.uk/"> <img src="/footer-img/instagram-icon.png" alt="" /></a>
+           <a href="https://www.linkedin.com/company/minicabs-uk-ltd"><img src="/footer-img/linkedin-icon.png" alt="" /></a>
+           <a href="https://www.youtube.com/channel/UCRIrgO01D1BlETz5KqnYCuA"><img src="/footer-img/youtube-icon.png" alt="" /></a>
+           <a href="https://api.whatsapp.com/send?phone=4402082044444"> <img src="/footer-img/whatsapp-icon.png" alt="" /></a>
           </div>
         </div>
       </div>
