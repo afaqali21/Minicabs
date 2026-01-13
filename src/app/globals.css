@@ -113,7 +113,7 @@ body {
 }
 
 .fotr-blue{
-  display: block;
+    display: block;
     z-index: 2;
     position: absolute;
     right: 0%;
@@ -122,7 +122,7 @@ body {
     
 }
 .fotr-blue::after{
-  content: " ";
+    content: " ";
     position: absolute;
     display: block;
     width: 15%;

@@ -80,8 +80,8 @@ const Booking = () => {
       selectedService: activeItem,
       pickupLocation: pickup,
       destination: destination,
-      dateTime1: dateTime1 ? dateTime1.toISOString() : null,
-      dateTime2: dateTime2 ? dateTime2.toISOString() : null,
+      dateTime1: dateTime1 === 'ASAP' ? 'ASAP' : (dateTime1 ? dateTime1.toISOString() : null),
+      dateTime2: dateTime2 === 'ASAP' ? 'ASAP' : (dateTime2 ? dateTime2.toISOString() : null),
       additionalStops: addStop,
       travelType: selectedRadio,
     };

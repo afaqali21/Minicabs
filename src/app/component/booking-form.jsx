@@ -24,13 +24,18 @@ export default function Simplebooking({ onSave }) {
       setFormData(parsedData); 
       setpickup(parsedData.pickupLocation || '');  
       setDestination(parsedData.destination || '');
-      setDateTime1(parsedData.dateTime1 ? new Date(parsedData.dateTime1) : null);
-      setDateTime2(parsedData.dateTime2 ? new Date(parsedData.dateTime2) : null);
+      setDateTime1(parsedData.dateTime1 === 'ASAP' ? 'ASAP' : (parsedData.dateTime1 ? new Date(parsedData.dateTime1) : null));
+      setDateTime2(parsedData.dateTime2 === 'ASAP' ? 'ASAP' : (parsedData.dateTime2 ? new Date(parsedData.dateTime2) : null));
       setSelectedRadio(parsedData.travelType || null);
       setActiveItem(parsedData.selectedService || 'minicab-field');
       setaddStop(parsedData.additionalStops || '');
 
-      handleSave(parsedData.pickupLocation || '', parsedData.destination || '', parsedData.dateTime1 ? new Date(parsedData.dateTime1) : null || '',parsedData.dateTime2 ? new Date(parsedData.dateTime2) : null);
+      handleSave(
+        parsedData.pickupLocation || '', 
+        parsedData.destination || '', 
+        parsedData.dateTime1 === 'ASAP' ? 'ASAP' : (parsedData.dateTime1 ? new Date(parsedData.dateTime1) : null),
+        parsedData.dateTime2 === 'ASAP' ? 'ASAP' : (parsedData.dateTime2 ? new Date(parsedData.dateTime2) : null)
+      );
 
     } else {
      
@@ -80,6 +85,8 @@ export default function Simplebooking({ onSave }) {
     } else if (radioType === 'oneway') {
       setFields([]); // Clear fields
       setSelectedRadio('oneway');
+      setDateTime2(null); // Clear return date
+      handleSave(pickup, destination, dateTime1, null); // Update parent to clear return date
     }
   };
 
@@ -125,8 +132,8 @@ export default function Simplebooking({ onSave }) {
     onSave({
       pickup: pickupValue,
       destination: destinationValue,
-      dateTime1: dateTimeValue === 'ASAP' ? 'ASAP' : (dateTimeValue instanceof Date ? dateTimeValue.toISOString() : null), 
-      dateTime2: dateTime2Value ? dateTime2Value.toISOString() : null, 
+      dateTime1: dateTimeValue === 'ASAP' ? 'ASAP' : (dateTimeValue instanceof Date && !isNaN(dateTimeValue) ? dateTimeValue.toISOString() : null), 
+      dateTime2: dateTime2Value === 'ASAP' ? 'ASAP' : (dateTime2Value instanceof Date && !isNaN(dateTime2Value) ? dateTime2Value.toISOString() : null), 
 
     });   
   };

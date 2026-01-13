@@ -7,7 +7,7 @@ const VehicleDetailSucess = ({ selectedCar }) => {
                 <div className='bg-colorGrey px-5 py-8 my-7'>
                     <h2 className='text-hColor text-2xl pb-4'>Vehicle Detail</h2>
                     <div className='grid  md:grid-cols-2'>
-                        <div className='grid grid-cols-2'>
+                        <div className='grid grid-cols-2 gap-y-4'>
                             <div>
                                 <p className='text-hColor'>Vehicle</p>
                                 <p className='text-hColor font-semibold'>{selectedCar?.name}</p>
@@ -30,7 +30,7 @@ const VehicleDetailSucess = ({ selectedCar }) => {
                             <img src={selectedCar?.image} alt="" />
                         </div>          
                     </div>
-                    <div className='flex'>
+                    <div className='flex pt-3'>
                         <img src="/success-img/driver-img.png" alt="" />
                         <div className=' pl-3'>
                             <p className='text-hColor'>Driver</p>

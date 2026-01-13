@@ -17,6 +17,12 @@ const Bookingdetailsuccess = ({ bookingData }) => {
                             <p className='text-hColor'>Date & Time</p>
                             <p className='text-hColor font-semibold'>{bookingData?.dateTime1 === 'ASAP' ? 'ASAP' : (bookingData?.dateTime1 ? new Date(bookingData.dateTime1).toLocaleString() : 'N/A')}</p>
                         </div>
+                        {bookingData?.dateTime2 && bookingData.dateTime2 !== 'N/A' && (
+                            <div>
+                                <p className='text-hColor'>Return Date & Time</p>
+                                <p className='text-hColor font-semibold'>{bookingData?.dateTime2 === 'ASAP' ? 'ASAP' : new Date(bookingData.dateTime2).toLocaleString()}</p>
+                            </div>
+                        )}
                         <div>
                             <p className='text-hColor'>Payment</p>
                             <p className='text-hColor font-semibold'>{bookingData?.paymentMethod}</p>

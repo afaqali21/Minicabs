@@ -48,7 +48,7 @@ const Successbooking = () => {
             </div>
             <div className='relative'>
               <div className='sticky top-0 pb-10'>
-                <SidebarSuccess passengerDetails={successData.passenger} />           
+                <SidebarSuccess passengerDetails={successData.passenger} dateTime1={successData.dateTime1} />           
               </div>                      
             </div>
           </div>             

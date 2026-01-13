@@ -45,7 +45,7 @@ const SidebarForm = ({ bookingData, selectedCar, selectedData, passengerDetails,
                                 </div>
                             </div>      
                                  {/* Conditionally display Return Date/Time only if user has selected return trip */}
-                                 {bookingData.dateTime2 &&  (
+                                 {bookingData.dateTime2 && bookingData.dateTime2 !== 'N/A' && (
                                 <div className='pb-6 border-l-2 border-colorGreen flex '>
                                     <div className="-ml-[5px] pt-1">
                                         <img src="/booking-engine-img/circle.png" alt="" />
@@ -53,7 +53,7 @@ const SidebarForm = ({ bookingData, selectedCar, selectedData, passengerDetails,
                                     <div className="pl-3">
                                         <h2 className="text-[#AAAFB6] font-medium text-base">Return Date / Time</h2>
                                         <div className='flex space-x-8'>
-                                            <p>{bookingData.dateTime2 ? new Date(bookingData.dateTime2).toLocaleString() : 'N/A'}</p>
+                                            <p>{bookingData.dateTime2 === 'ASAP' ? 'ASAP' : new Date(bookingData.dateTime2).toLocaleString()}</p>
                                         </div>
                                     </div>
                                 </div>
