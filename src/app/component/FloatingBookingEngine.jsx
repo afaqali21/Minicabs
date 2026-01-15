@@ -39,11 +39,11 @@ const FloatingBookingEngine = ({
   };
 
   const cars = [
-    { id: 1, name: 'Saloon', type: 'Standard family size', image: '/booking-engine-img/saloon-new.png', passengers: 4, suitcases: 2, luggage: 2, price: '£37.50', promoPrice: '£32.50' },
-    { id: 2, name: 'Estate', type: 'Standard family size', image: '/booking-engine-img/estate-new.png', passengers: 4, suitcases: 2, luggage: 2, price: '£44' },
-    { id: 3, name: '7 Seater', type: 'Large family', image: '/booking-engine-img/7-seater-new.png', passengers: 6, suitcases: 3, luggage: 5, price: '£57' },
-    { id: 4, name: '8 Seater', type: 'Extra large family', image: '/booking-engine-img/8-seater-new.png', passengers: 7, suitcases: 4, luggage: 6, price: '£69' },
-    { id: 5, name: '9 Seater', type: 'Extra large family', image: '/booking-engine-img/9-seater-new.png', passengers: 8, suitcases: 5, luggage: 7, price: '£77' },
+    { id: 1, name: 'Saloon', type: 'Standard family size', image: '/booking-engine-img/Saloon-new.png', passengers: 4, suitcases: 2, luggage: 2, price: '£37.50', promoPrice: '£32.50' },
+    { id: 2, name: 'Estate', type: 'Standard family size', image: '/booking-engine-img/Estate-new.png', passengers: 4, suitcases: 2, luggage: 2, price: '£44' },
+    { id: 3, name: '7 Seater', type: 'Large family', image: '/booking-engine-img/7-Seater-new.png', passengers: 6, suitcases: 3, luggage: 5, price: '£57' },
+    { id: 4, name: '8 Seater', type: 'Extra large family', image: '/booking-engine-img/8-Seater-new.png', passengers: 7, suitcases: 4, luggage: 6, price: '£69' },
+    { id: 5, name: '9 Seater', type: 'Extra large family', image: '/booking-engine-img/9-Seater-new.png', passengers: 8, suitcases: 5, luggage: 7, price: '£77' },
     { id: 6, name: 'Executive', type: 'Executive', image: '/booking-engine-img/executive-new.png', passengers: 4, suitcases: 2, luggage: 2, price: '£53' },
   ];
 
