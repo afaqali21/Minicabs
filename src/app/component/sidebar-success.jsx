@@ -1,6 +1,25 @@
 import React from 'react'
 import Rating from '../component/rating';
-const Sidebarsuccess = ({ passengerDetails }) => {
+const Sidebarsuccess = ({ passengerDetails, submissionTime }) => {
+  const [timeAgo, setTimeAgo] = React.useState('Just now');
+
+  React.useEffect(() => {
+    if (!submissionTime) return;
+
+    const calculateTimeAgo = () => {
+      const diff = Math.floor((new Date() - new Date(submissionTime)) / 60000); // Difference in minutes
+      if (diff < 1) return 'Just now';
+      return `${diff} mins ago`;
+    };
+
+    setTimeAgo(calculateTimeAgo());
+
+    const interval = setInterval(() => {
+      setTimeAgo(calculateTimeAgo());
+    }, 60000); // Update every minute
+
+    return () => clearInterval(interval);
+  }, [submissionTime]);
   const initialRating = 3;
   return (
     <div>
@@ -12,7 +31,7 @@ const Sidebarsuccess = ({ passengerDetails }) => {
             <img className='pr-3' src="/success-img/customer-img.png" alt="" />
             <div className=''>
               <h3 className='text-colorBlue font-semibold text-lg'>{passengerDetails?.name}</h3>
-              <p className='text-sm text-hColor'>15 mins ago</p>
+              <p className='text-sm text-hColor'>{timeAgo}</p>
             </div>
           </div>
           <div className='pt-5'>

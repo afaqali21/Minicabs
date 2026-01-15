@@ -4,10 +4,10 @@ import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/material_green.css'; // Choose a theme or use the default
 
-const DateTimeSelector = ({ value, onChange }) => {
+const DateTimeSelector = ({ value, onChange, openOnMount }) => {
   const [inputValue, setInputValue] = useState(''); // State to manage input value
   const [showButtons, setShowButtons] = useState(false); // State to manage visibility of buttons
-  const [showDateTimePicker, setShowDateTimePicker] = useState(false); // State to manage visibility of date-time picker
+  const [showDateTimePicker, setShowDateTimePicker] = useState(openOnMount || false); // State to manage visibility of date-time picker
   const [selectedDateTime, setSelectedDateTime] = useState(value || null); // State to temporarily store the selected date and time
   useEffect(() => {
     if (value) {
@@ -60,6 +60,8 @@ const DateTimeSelector = ({ value, onChange }) => {
   return (
     <div className="date-time-selector">
       {/* Input field */}
+      {/* Input field */}
+      {!showDateTimePicker && (
       <input
         type="text"
         value={inputValue}
@@ -67,16 +69,17 @@ const DateTimeSelector = ({ value, onChange }) => {
         placeholder="ASAP"
         readOnly
         required
-        className="px-2.5 pb-2.5 pt-4 w-full md:w-[476px] text-sm text-gray-900 bg-transparent rounded border-2 border-[#A9ACB3] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        className="px-2.5 pb-2.5 pt-4 w-full md:w-[400px] text-sm text-gray-900 bg-transparent rounded border-2 border-[#193d89] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
       />
+      )}
 
-      {/* Show buttons when input is clicked */}
+      {/* Show buttons when input is clicked
       {showButtons && (
         <div className="button-group flex">
           <button onClick={handleAsapClick} className='bg-colorBlue w-full text-white rounded-md'>ASAP</button>
           <button onClick={handleLaterClick} className='bg-colorGreen w-full text-white rounded-md py-7'>Later</button>
         </div>
-      )}
+      )} */}
 
       {/* Date-Time Picker */}
       {showDateTimePicker && (

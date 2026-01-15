@@ -25,13 +25,13 @@ const PassengerDetails = ({ onPassengerChange }) => {
 <div className='bg-colorGrey px-6 py-8 my-7'>
 <h2 className='text-hColor text-2xl pb-4'>Passenger information</h2>
 <ul className="grid grid-cols-2 sm:grid-cols-5 gap-0 lg:flex ">
-    <div className="bg-white selct-icon px-3 pt-2 rounded-l ">
+    <div className="bg-white selct-icon px-3 pt-2 rounded-l cursor-pointer">
         <li className="block xl:flex items-center py-2 ">
             <img className='mx-auto' src="booking-engine-img/user2.png" alt="" />
             <p className="ps-3 sm:text-sm lg:text-base">Book as guest</p>
         </li>
     </div>
-    <div className="bg-white selct-icon px-5 pt-2 ">
+    <div className="bg-white selct-icon px-5 pt-2 cursor-pointer">
         <li className="block xl:flex  items-center py-2 ">
             <img className='mx-auto' src="booking-engine-img/google-log.png" alt="" />
             <p className="ps-3 sm:text-sm lg:text-base text-center">Book with google</p>

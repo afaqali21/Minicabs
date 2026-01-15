@@ -63,6 +63,7 @@ export default function Simpleboking() {
         selectedCar,
         paymentMethod: selectedData,
         passenger: passengerDetails,
+        submissionTime: new Date().toISOString(),
       };
 
       // Log the data to the console
@@ -104,8 +105,8 @@ export default function Simpleboking() {
                 onPassengerChange={handlePassengerDetailsChange}
               />
             </div>
-            <div className="relative">
-              <div className="sticky top-0 pb-10">
+            <div className="relative w-full lg:w-[30%]">
+              <div className="sticky  top-0 pb-10">
                 {/* Sidebar receives bookingData, selectedCar, and selectedData */}
                 <SidebarForm
                   bookingData={bookingData}

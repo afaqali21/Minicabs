@@ -1,8 +1,6 @@
 import React from 'react'
 
 const Bookingdetailsuccess = ({ bookingData }) => {
-  
-   
     return (
         <div>
             <div className='container mx-auto'>

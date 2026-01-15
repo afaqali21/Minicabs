@@ -26,7 +26,7 @@ const SelectService = ({ onCarSelect }) => {
       <div className='container mx-auto'>
         <div className='bg-colorGrey px-6 py-8 my-4'>
           <h2 className='text-hColor text-2xl pb-4'>Select Service</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-0 lg:flex text-center">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-0 lg:flex text-center cursor-pointer">
             {carData.map((car, index) => (
               <div
               key={index}

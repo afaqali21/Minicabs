@@ -53,11 +53,15 @@ const Booking = () => {
     setAdditionalFields(updatedFields);
   };
 
+  const [addStops, setAddStops] = useState([]); // Array of stops
+
   const handlePickupChange = (event) => {
     setpickup(event.target.value);
   };
-  const handleAddstopChange = (event) => {
-    setaddStop(event.target.value);
+  const handleAddstopChange = (event, index) => {
+    const newStops = [...addStops];
+    newStops[index] = event.target.value;
+    setAddStops(newStops);
   };
 
   const handleDestinationChange = (event) => {
@@ -82,7 +86,7 @@ const Booking = () => {
       destination: destination,
       dateTime1: dateTime1 === 'ASAP' ? 'ASAP' : (dateTime1 ? dateTime1.toISOString() : null),
       dateTime2: dateTime2 === 'ASAP' ? 'ASAP' : (dateTime2 ? dateTime2.toISOString() : null),
-      additionalStops: addStop,
+      additionalStops: addStops,
       travelType: selectedRadio,
     };
     // If 'airport' is selected, clear the stored data
@@ -152,8 +156,8 @@ const Booking = () => {
                   {additionalFields.map((field, index) => (
                     <div key={index}>
                       <div class="relative">
-                        <input type="text" list="countries" value={addStop}
-                    onChange={handleAddstopChange} id={`Destination-${index}`} class="block mt-2 px-2.5 pb-2.5 pt-4 w-full md:w-[476px]
+                        <input type="text" list="countries" value={addStops[index] || ''}
+                    onChange={(e) => handleAddstopChange(e, index)} id={`Destination-${index}`} class="block mt-2 px-2.5 pb-2.5 pt-4 w-full md:w-[476px]
                  text-sm text-gray-900 bg-white rounded border-2 border-[#A9ACB3] appearance-none
                  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required/>
                         <label htmlFor={`Destination-${index}`} class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Stops</label>

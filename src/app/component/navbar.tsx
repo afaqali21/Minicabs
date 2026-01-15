@@ -9,7 +9,7 @@ export default function Navbar() {
     <div className='container mx-auto'>
       <nav className="bg-white border-gray-200 dark:bg-gray-900">
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
-          <a href="https://flowbite.com"> <span className="flex items-center">
+          <a href="https://minicabs.co.uk"> <span className="flex items-center">
             <Image src="/header-img/logo.png" width={150} height={300} className=" mr-3" alt="Logo" />
           </span></a>
           <div className="block md:flex items-center md:space-x-5">

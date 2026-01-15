@@ -77,7 +77,8 @@ const handleflightChange = (data) => {
           passenger: passengerDetails,
           ...flightDetails,
           selectedCar,
-          paymentMethod: selectedData
+          paymentMethod: selectedData,
+          submissionTime: new Date().toISOString()
         };
 
         // Log the data to the console for debugging

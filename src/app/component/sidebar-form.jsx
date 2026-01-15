@@ -1,16 +1,28 @@
 'use client'
 import React, { useState } from 'react';
-const SidebarForm = ({ bookingData, selectedCar, selectedData, passengerDetails, onSubmit }) => {
+import dynamic from 'next/dynamic';
 
-  
-      
+// Dynamically import MapComponent to avoid SSR issues with Leaflet
+const MapComponent = dynamic(() => import('./MapComponent'), {
+    ssr: false,
+    loading: () => <div className="h-[300px] w-full bg-gray-200 animate-pulse flex items-center justify-center">Loading Map...</div>
+});
+
+const SidebarForm = ({ bookingData, selectedCar, selectedData, passengerDetails, onSubmit }) => {
+    console.log("SidebarForm bookingData:", bookingData);
+
     return (
         <>
-            <div className='container mx-auto'>
+            <div className='w-full'>
                 <div className="border-2 rounded-md mt-9">
                     <div className=' pb-7 '>
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d158966.63416266537!2d-0.4496746508605485!3d51.49755292174362!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e6!4m5!1s0x487604b900d26973%3A0x4291f3172409ea92!2sLondon%20Eye%2C%20London%2C%20UK!3m2!1d51.5031864!2d-0.11951919999999999!4m5!1s0x487673cb743ccf01%3A0xea74a219c60588e1!2sTerminal%202%2C%20Inner%20Ring%20E%2C%20Hounslow%20TW6%201EW%2C%20UK!3m2!1d51.4695758!2d-0.4496072!5e0!3m2!1sen!2s!4v1693216184056!5m2!1sen!2s"
-                            width="350" height="300" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        {/* Leaflet Map Integration */}
+                        <div className='overflow-hidden relative z-0'>
+                            <MapComponent 
+                                pickup={bookingData.pickup} 
+                                destination={bookingData.destination} 
+                            />
+                        </div>
                     </div>
                     <div className="mx-7 pb-9" >
                         <div>
@@ -20,16 +32,29 @@ const SidebarForm = ({ bookingData, selectedCar, selectedData, passengerDetails,
                                 </div>
                                 <div className="pl-3">
                                     <h2 className="text-[#AAAFB6] font-medium text-base">Pickup At</h2>
-                                    <p> {bookingData.pickup }</p>
-                                </div>
+                                    <p className="break-words"> {bookingData.pickup || "Select Pickup Location"}</p>
+                                </div>   
                             </div>
+                             {bookingData.additionalStops && Array.isArray(bookingData.additionalStops) && bookingData.additionalStops.map((stop, index) => (
+                                stop && (
+                                    <div key={index} className='pb-6 border-l-2 border-colorGreen flex '>
+                                        <div className="-ml-[5px] pt-1">
+                                            <img src="/booking-engine-img/circle.png" alt="" />
+                                        </div>
+                                        <div className="pl-3">
+                                            <h2 className="text-[#AAAFB6] font-medium text-base">Stop {index + 1}</h2>
+                                            <p className="break-words">{stop}</p>
+                                        </div>
+                                    </div>
+                                )
+                            ))}
                             <div className='pb-6 border-l-2 border-colorGreen flex '>
                                 <div className="-ml-[5px] pt-1">
                                     <img src="/booking-engine-img/circle.png" alt="" />
                                 </div>
                                 <div className="pl-3">
                                     <h2 className="text-[#AAAFB6] font-medium text-base">Destination</h2>
-                                    <p>{bookingData.destination }</p>
+                                    <p className="break-words">{bookingData.destination || "Select Destination"}</p>
                                 </div>
                             </div>
                             <div className='pb-6 border-l-2 border-colorGreen flex '>
@@ -66,7 +91,7 @@ const SidebarForm = ({ bookingData, selectedCar, selectedData, passengerDetails,
                                     <h2 className="text-[#AAAFB6] font-medium text-base">Services</h2>
                                     {selectedCar && (
                                         <div>
-                                            <p> {selectedCar.name}</p>                  
+                                            <p className="break-words"> {selectedCar.name}</p>                  
                                         </div>
                                     )}                                                       
                                 </div>     
@@ -77,7 +102,7 @@ const SidebarForm = ({ bookingData, selectedCar, selectedData, passengerDetails,
                                 </div>
                                 <div className="pl-3">
                                     <h2 className="text-[#AAAFB6] font-medium text-base">Payment Method</h2>
-                                    <p>{selectedData}</p>
+                                    <p className="break-words">{selectedData}</p>
                                 </div>
                             </div>
                         </div>                                                  

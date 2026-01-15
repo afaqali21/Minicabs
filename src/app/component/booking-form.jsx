@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Datetimepick from '../component/datetime';
 
 export default function Simplebooking({ onSave }) {
@@ -9,12 +9,21 @@ export default function Simplebooking({ onSave }) {
   const [additionalFields, setAdditionalFields] = useState([]);
   const [activeItem, setActiveItem] = useState('minicab-field');
   const [pickup, setpickup] = useState(''); // Pickup input
-  const [addStop, setaddStop] = useState(''); // addstopinput
+  const [addStops, setAddStops] = useState([]); // Array of stops
   const [destination, setDestination] = useState(''); // Destination input
   const [dateTime1, setDateTime1] = useState(null); // First datetime picker
   const [dateTime2, setDateTime2] = useState(null); // Second datetime picker for 'return'
   const [isFromBookingEngine, setIsFromBookingEngine] = useState(false); // Add this state
   const [bookingData, setBookingData] = useState({});
+
+  // Autocomplete State
+  const [pickupSuggestions, setPickupSuggestions] = useState([]);
+  const [destSuggestions, setDestSuggestions] = useState([]);
+  
+  // Refs to control fetching behavior (prevent loop on selection)
+  const shouldFetchPickup = useRef(true);
+  const shouldFetchDest = useRef(true);
+
    // Function to check if data comes from booking engine
    const checkBookingEngineData = () => {
     const storedData = localStorage.getItem('bookingData');
@@ -28,7 +37,10 @@ export default function Simplebooking({ onSave }) {
       setDateTime2(parsedData.dateTime2 === 'ASAP' ? 'ASAP' : (parsedData.dateTime2 ? new Date(parsedData.dateTime2) : null));
       setSelectedRadio(parsedData.travelType || null);
       setActiveItem(parsedData.selectedService || 'minicab-field');
-      setaddStop(parsedData.additionalStops || '');
+      setActiveItem(parsedData.selectedService || 'minicab-field');
+      const loadedStops = Array.isArray(parsedData.additionalStops) ? parsedData.additionalStops : [];
+      setAddStops(loadedStops);
+      setAdditionalFields(loadedStops.map(() => '')); // Create inputs for each stop
 
       handleSave(
         parsedData.pickupLocation || '', 
@@ -51,7 +63,7 @@ export default function Simplebooking({ onSave }) {
     setDateTime2(null);
     setSelectedRadio(null);
     setActiveItem('minicab-field');
-    setaddStop('');
+    // setaddStop(''); // This line was erroneous in original?
     handleSave('', '', null); // Clear sidebar data
 
   };
@@ -71,6 +83,7 @@ export default function Simplebooking({ onSave }) {
     'London Luton Airport',
     'London City Airport',
     'London Stansted Airport',
+    'London Southend Airport',
     'London Southend Airport',
   ];
 
@@ -100,20 +113,11 @@ export default function Simplebooking({ onSave }) {
     setAdditionalFields(updatedFields);
   };
 
-  const handlePickupChange = (event) => {
-    const newPickup = event.target.value;
-    setpickup(newPickup);
-    handleSave(newPickup, destination, dateTime1, dateTime2);  // Pass the updated pickup value
-  };
-
-  const handleAddstopChange = (event) => {
-    setaddStop(event.target.value);
-  };
-
-  const handleDestinationChange = (event) => {
-    const newDestination = event.target.value;  
-    setDestination(newDestination);   
-    handleSave(pickup, newDestination, dateTime1, dateTime2);  // Pass the updated destination value
+  const handleAddstopChange = (event, index) => {
+    const newStops = [...addStops];
+    newStops[index] = event.target.value;
+    setAddStops(newStops);
+    handleSave(pickup, destination, dateTime1, dateTime2, newStops);
   };
 
   const handleDateTime1Change = (date) => {      
@@ -136,6 +140,69 @@ export default function Simplebooking({ onSave }) {
       dateTime2: dateTime2Value === 'ASAP' ? 'ASAP' : (dateTime2Value instanceof Date && !isNaN(dateTime2Value) ? dateTime2Value.toISOString() : null), 
 
     });   
+  };
+
+  // --- Autocomplete Logic ---
+
+  const fetchSuggestions = async (query, type) => {
+    if (!query || query.length < 3) {
+        if (type === 'pickup') setPickupSuggestions([]);
+        if (type === 'destination') setDestSuggestions([]);
+        return;
+    }
+
+    try {
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=gb&limit=5`);
+        const data = await response.json();
+        if (type === 'pickup') setPickupSuggestions(data);
+        if (type === 'destination') setDestSuggestions(data);
+    } catch (error) {
+        console.error("Error fetching suggestions:", error);
+    }
+  };
+
+  // Debounce helper
+  useEffect(() => {
+      const timer = setTimeout(() => {
+          if (pickup && shouldFetchPickup.current) fetchSuggestions(pickup, 'pickup');
+      }, 500);
+      return () => clearTimeout(timer);
+  }, [pickup]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+        if (destination && shouldFetchDest.current) fetchSuggestions(destination, 'destination');
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [destination]);
+
+  const handlePickupChange = (event) => {
+    const newPickup = event.target.value;
+    shouldFetchPickup.current = true; // User is typing, allow fetch
+    setpickup(newPickup);
+    handleSave(newPickup, destination, dateTime1, dateTime2);
+  };
+
+  const handleDestinationChange = (event) => {
+    const newDestination = event.target.value;  
+    shouldFetchDest.current = true; // User is typing, allow fetch
+    setDestination(newDestination);   
+    handleSave(pickup, newDestination, dateTime1, dateTime2);
+  };
+
+  const selectSuggestion = (suggestion, type) => {
+      const address = suggestion.display_name;
+      if (type === 'pickup') {
+          shouldFetchPickup.current = false; // Prevent re-fetch loop
+          setpickup(address);
+          setPickupSuggestions([]);
+          handleSave(address, destination, dateTime1, dateTime2);
+      } else {
+          shouldFetchDest.current = false; // Prevent re-fetch loop
+          setDestination(address);
+          setDestSuggestions([]);
+          handleSave(pickup, address, dateTime1, dateTime2);
+      }
   };
 
   return (
@@ -168,51 +235,83 @@ export default function Simplebooking({ onSave }) {
           </div>   
           <div className='bg-colorGrey px-7 py-9'>
             <h2 className='text-hColor text-2xl pb-4'>Enter Pickup / Destination</h2>
-            <div className="relative">
+            
+            {/* Pickup Field */}
+            <div className={`relative ${pickupSuggestions.length > 0 ? 'z-50' : 'z-0'}`}>
               <input value={pickup}
                 onChange={handlePickupChange}
-                 list="countries" type="text" id="pickup" className="block px-2.5 pb-2.5 pt-4 w-full
+                 autoComplete="off"
+                 type="text" id="pickup" className="block px-2.5 pb-2.5 pt-4 w-full
                  text-sm text-gray-900 bg-white rounded border-2 border-[#A9ACB3] appearance-none
                  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
               <label htmlFor="pickup" className="absolute text-sm text-gray-500  duration-300 
                 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2
                peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
                peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Pickup At</label>
+               
+               {/* Pickup Suggestions */}
+               {pickupSuggestions.length > 0 && (
+                   <ul className="absolute left-0 right-0 top-full mt-1 z-50 bg-white border border-gray-300 rounded-md shadow-2xl max-h-60 overflow-y-auto">
+                       {pickupSuggestions.map((item, index) => (
+                           <li 
+                               key={index} 
+                               className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-sm text-gray-700 border-b last:border-b-0"
+                               onClick={() => selectSuggestion(item, 'pickup')}
+                           >
+                               {item.display_name}
+                           </li>
+                       ))}
+                   </ul>
+               )}
             </div>  
-            <datalist id="countries">
-              {countries.map((country, index) => (
-                <option key={index} value={country} />
-              ))}
-            </datalist>
-            <div className=" py-3">     
+            
+            <div className=" py-3 relative z-0">     
               <div className='flex'>
                 <span className='pr-2'>Add stop</span> <img className='cursor-pointer' onClick={handleAddField}
                   src="/booking-engine-img/more-1.svg" width={24} height={24} /></div>
               {additionalFields.map((field, index) => (
                 <div key={index}>     
-                  <div class="relative">
-                    <input type="text" value={addStop}
-                      onChange={handleAddstopChange}
-                      id="destination-add" class="block px-2.5 pb-2.5 pt-4 w-full
+                  <div className="relative">
+                    <input type="text" value={addStops[index] || ''}
+                      onChange={(e) => handleAddstopChange(e, index)}
+                      id="destination-add" className="block px-2.5 pb-2.5 pt-4 w-full
                  text-sm text-gray-900 bg-white rounded border-2 border-[#A9ACB3] appearance-none
                  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
-                    <label for="destination-add" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Floating outlined</label>
+                    <label htmlFor="destination-add" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Stop {index + 1}</label>
                   </div>
                   <img className='cursor-pointer' onClick={() => handleRemoveField(index)} src="/booking-engine-img/minus.png" width={34} // Set the desired width
                     height={24} alt="" />
                 </div>
               ))}
             </div>
-            <div className="relative">
+            
+            {/* Destination Field */}
+            <div className={`relative ${destSuggestions.length > 0 ? 'z-50' : 'z-0'}`}>
             <input value={destination}
                 onChange={handleDestinationChange}
-                 list="countries" type='text' id="destionation" className="block px-2.5 pb-2.5 pt-4 w-full
+                 autoComplete="off"
+                 type='text' id="destionation" className="block px-2.5 pb-2.5 pt-4 w-full
                  text-sm text-gray-900 bg-white rounded border-2 border-[#A9ACB3] appearance-none
                  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
               <label htmlFor="destionation" className="absolute text-sm text-gray-500  duration-300 
                 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2
                peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
                peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Destination</label>
+               
+               {/* Destination Suggestions */}
+               {destSuggestions.length > 0 && (
+                   <ul className="absolute left-0 right-0 top-full mt-1 z-50 bg-white border border-gray-300 rounded-md shadow-2xl max-h-60 overflow-y-auto">
+                       {destSuggestions.map((item, index) => (
+                           <li 
+                               key={index} 
+                               className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-sm text-gray-700 border-b last:border-b-0"
+                               onClick={() => selectSuggestion(item, 'destination')}
+                           >
+                               {item.display_name}
+                           </li>
+                       ))}
+                   </ul>
+               )}
             </div>    
             
             <div className='flex'>
@@ -250,4 +349,4 @@ export default function Simplebooking({ onSave }) {
       </div>
     </div >
   );
-}                                   
+}
