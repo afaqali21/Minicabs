@@ -2,152 +2,202 @@
 import React, { useState, useEffect } from 'react';
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-import 'flatpickr/dist/themes/material_green.css'; // Choose a theme or use the default
+import 'flatpickr/dist/themes/material_blue.css'; 
 
 const DateTimeSelector = ({ value, onChange, openOnMount }) => {
-  const [inputValue, setInputValue] = useState(''); // State to manage input value
-  const [showButtons, setShowButtons] = useState(false); // State to manage visibility of buttons
-  const [showDateTimePicker, setShowDateTimePicker] = useState(openOnMount || false); // State to manage visibility of date-time picker
-  const [selectedDateTime, setSelectedDateTime] = useState(value || null); // State to temporarily store the selected date and time
+  const [inputValue, setInputValue] = useState('');
+  const [showDateTimePicker, setShowDateTimePicker] = useState(openOnMount || false);
+  const [selectedDateTime, setSelectedDateTime] = useState(value || null);
+
   useEffect(() => {
-    if (value) {
-      setInputValue(value.toLocaleString()); // Update input if parent component passes a new value
+    if (value && value !== 'ASAP') {
+      const date = new Date(value);
+      if (!isNaN(date)) {
+        setInputValue(date.toLocaleString('en-GB', { 
+            day: '2-digit', 
+            month: 'short', 
+            year: 'numeric',
+            hour: '2-digit', 
+            minute: '2-digit' 
+        }));
+      }
+    } else if (value === 'ASAP') {
+        setInputValue('ASAP');
     }
   }, [value]);
 
-
-  // Handle input click to show buttons
-  const handleInputClick = () => {
-    setShowButtons((prevShowButtons) => !prevShowButtons); // Toggle state
+  const handleDateChange = (selectedDate) => {
+    const selected = selectedDate[0];
+    setSelectedDateTime(selected);
   };
 
-
-
-  // Handle ASAP button click
-  const handleAsapClick = () => {
-    setInputValue('ASAP');
-    onChange('ASAP'); // Notify parent of ASAP selection
-    setShowButtons(false); // Hide buttons after selection
-    setShowButtons(false); // Hide buttons after selection
-    setShowDateTimePicker(false); // Hide date-time picker if open
-  };
-
-  // Handle Later button click
-  const handleLaterClick = () => {
-    setShowDateTimePicker((prev) => !prev); // Toggle date-time picker visibility
-    setShowButtons(false); // Hide buttons after selection
-  };
-
-   // Handle date-time selection from Flatpickr
-   const handleDateChange = (selectedDate) => {
-    const selected = selectedDate[0]; // Get the selected date
-    setSelectedDateTime(selected); // Update local state
-    onChange(selected); // Notify parent component with the selected date
-  };
-
-
-  // Handle OK button click to save the selected date-time to input
   const handleOkClick = () => {    
     if (selectedDateTime) {
-      const formattedDate = selectedDateTime.toLocaleString(); // Format and set date as input value
-      setInputValue(formattedDate);
-      onChange(selectedDateTime); // Notify parent with selected date/time
-
+      onChange(selectedDateTime);
+      setShowDateTimePicker(false);
     }
-    setShowDateTimePicker(false); // Hide date-time picker after saving the date-time
+  };
+
+  const togglePicker = () => {
+      setShowDateTimePicker(!showDateTimePicker);
   };
 
   return (
-    <div className="date-time-selector">
-      {/* Input field */}
-      {/* Input field */}
-      {!showDateTimePicker && (
-      <input
-        type="text"
-        value={inputValue}
-        onClick={handleInputClick}
-        placeholder="ASAP"
-        readOnly
-        required
-        className="px-2.5 pb-2.5 pt-4 w-full md:w-[400px] text-sm text-gray-900 bg-transparent rounded border-2 border-[#193d89] appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-      />
-      )}
-
-      {/* Show buttons when input is clicked
-      {showButtons && (
-        <div className="button-group flex">
-          <button onClick={handleAsapClick} className='bg-colorBlue w-full text-white rounded-md'>ASAP</button>
-          <button onClick={handleLaterClick} className='bg-colorGreen w-full text-white rounded-md py-7'>Later</button>
+    <div className="relative w-full">
+      {/* Premium Input Field */}
+      <div 
+        onClick={togglePicker}
+        className="flex items-center justify-between px-4 py-3 bg-white border border-gray-300 rounded-lg cursor-pointer hover:border-[#193e89] transition-all shadow-sm"
+      >
+        <div className="flex items-center gap-3">
+          <div className="text-[#193e89]">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div>
+            <span className="block text-[10px] uppercase text-gray-500 font-bold tracking-wider">Date & Time</span>
+            <span className="text-sm font-semibold text-[#193e89]">{inputValue || 'Select Date & Time'}</span>
+          </div>
         </div>
-      )} */}
+        <div className="text-[#193e89]">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+      </div>
 
-      {/* Date-Time Picker */}
+      {/* Modal Popup (Scoped to Booking Engine) */}
       {showDateTimePicker && (
-        <div className="datetime-picker-container">
-          <h3>Select Date & Time</h3>
-          <Flatpickr
-            value={selectedDateTime}
-            onChange={handleDateChange}
-            placeholder='Date Time'
-            options={{
-              enableTime: true,
-              dateFormat: 'Y-m-d H:i',
-              time_24hr: true,
-            }}
-            className="flatpickr flatpickr-datetime "
-          />
-          <button onClick={handleOkClick} className="ok-button">
-            OK
-          </button>
+        <div className="absolute inset-x-0 top-0 bottom-0 z-[500] flex items-center justify-center p-4">
+          {/* Backdrop (Scoped) */}
+          <div 
+            className="absolute inset-0 bg-black/40 backdrop-blur-[2px] rounded-lg animate-in fade-in duration-300"
+            onClick={() => setShowDateTimePicker(false)}
+          ></div>
+          
+          {/* Modal Content */}
+          <div className="relative bg-white top-[-128px] p-4 rounded-2xl shadow-2xl border border-gray-100 w-full max-w-[350px] animate-in zoom-in-95 duration-300">
+            <div className="flatpickr-custom-container mb-2">
+                <Flatpickr
+                value={selectedDateTime}
+                onChange={handleDateChange}
+                options={{
+                    enableTime: true,
+                    dateFormat: 'Y-m-d H:i',
+                    time_24hr: true,
+                    inline: true,
+                    minDate: 'today',
+                    monthSelectorType: 'static'
+                }}
+                className="hidden"
+                />
+            </div>
+
+            <div className="mt-6 flex gap-3">
+                <button 
+                    onClick={() => setShowDateTimePicker(false)}
+                    className="flex-1 py-3 text-sm font-bold text-gray-500 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all"
+                    type="button"
+                >
+                    Cancel
+                </button>
+                <button 
+                    onClick={handleOkClick}
+                    className="flex-1 py-3 text-sm font-bold text-white bg-[#7DBF00] hover:bg-[#6ca500] rounded-xl shadow-[0_4px_10px_rgba(125,191,0,0.3)] transition-all active:scale-95"
+                    type="button"
+                >
+                    Confirm Time
+                </button>
+            </div>
+          </div>
         </div>
       )}
 
-      <style jsx>{`
-        .date-time-selector {
-          position: relative;
-          display: inline-block;
+      <style jsx global>{`
+        .flatpickr-calendar.inline {
+            box-shadow: none !important;
+            border: 1px solid #e5e7eb !important;
+            // width: 100% !important;
+            background: #fff !important;
+            font-family: inherit !important;
+            border-radius: 12px !important;
+            overflow: hidden !important;
+        }
+        .flatpickr-months {
+            background: #fff !important;
+            height: 35px !important;
+        }
+        .flatpickr-months .flatpickr-month {
+            color: #fff !important;
+            fill: #fff !important;
+            background:#193d89 !important;
+        }
+        .flatpickr-current-month {
+            color: #fff !important;
+            font-weight: 800 !important;
         }
 
-        .input-field {
-          width: 200px;  
-          padding: 8px;
-          margin: 5px;
-          cursor: pointer;
-          box-sizing: border-box;
+        /* Weekday Header Blue Background */
+        .flatpickr-weekdays {
+            background: #193d89 !important;
+            height: 28px !important;
+        }
+        .flatpickr-weekday {
+        background:#193d89 !important;
+            color: #fff !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            font-size: 0.75rem !important;
         }
 
-        .button-group {
-          margin-top: 10px;
+        /* Day Styling */
+        .flatpickr-day {
+            color: #374151 !important;
+            font-weight: 500 !important;
+            border-radius: 6px !important;
+            height: 30px !important;
+            line-height: 30px !important;
+            width: 40px !important;
+            max-width: 30px !important;
+            font-size: 0.8rem !important;
+            margin: 1px auto !important;
+        }
+        .flatpickr-day:hover {
+            background: #f3f4f6 !important;
+        }
+        .flatpickr-day.selected {
+            background: #193d89 !important;
+            border-color: #193d89 !important;
+            color: #fff !important;
+        }
+        .flatpickr-day.prevMonthDay, .flatpickr-day.nextMonthDay {
+            color: #9ca3af !important;
         }
 
-        .button-group button {
-          margin-right: 5px;
-          padding: 10px 10px;
-          cursor: pointer;
+        /* Time Styling */
+        .flatpickr-time {
+            border-top: 1px solid #f3f4f6 !important;
+            margin-top: 10px !important;
+            padding-top: 10px !important;
+            background: #fff !important;
         }
-
-        .datetime-picker-container {
-          margin-top: 10px;
-          padding: 10px;
-          background: white;
-          border-radius: 8px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-          width: 350px;
-          text-align: center;
+        .flatpickr-time input {
+            color: #374151 !important;
+            font-weight: 800 !important;
+            font-size: 1rem !important;
         }
-
-        .flatpickr.flatpickr-datetime {
-          width: 100%;
+        .flatpickr-time .flatpickr-time-separator {
+            color: #374151 !important;
         }
-
-        .ok-button {
-          margin-top: 10px;
-          padding: 5px 10px;
-          cursor: pointer;
+        .flatpickr-months .flatpickr-prev-month, .flatpickr-months .flatpickr-next-month {
+            color: #193d89 !important;
+            padding: 10px !important;
         }
       `}</style>
     </div>
   );
 };
+
 
 export default DateTimeSelector;
