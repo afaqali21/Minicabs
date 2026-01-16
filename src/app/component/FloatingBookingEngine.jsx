@@ -125,39 +125,17 @@ const FloatingBookingEngine = ({
     }
   }, [selectedRadio]);
 
-  // Progressive Auth Form Scroll
-  useEffect(() => {
-    const scrollTo = (ref) => {
-        if (ref && ref.current) {
-            setTimeout(() => {
-                ref.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 100);
-        }
-    };
-
-    if (authMode === 'guest') {
-        if (authData.name && !authData.mobile) scrollTo(phoneRef);
-        else if (authData.mobile && !authData.email) scrollTo(emailRef);
-    } else if (authMode === 'register') {
-        if (authData.name && !authData.mobile) scrollTo(phoneRef);
-        else if (authData.mobile && !authData.email) scrollTo(emailRef);
-        else if (authData.email && !authData.password) scrollTo(passwordRef);
-    } else if (authMode === 'login') {
-        if (authData.mobile && !authData.password) scrollTo(passwordRef);
-    }
-  }, [authData, authMode]);
-
   // Progressive Step 3 Section Scroll
   const isAirportComplete = activeItem === 'airport' ? (
-    airportData.airline && airportData.flightNumber && airportData.arrivingFrom && airportData.meetTime
+    isScheduled ? (airportData.flightNumber && airportData.meetTime) : true
   ) : true;
 
   useEffect(() => {
     if (step === 3) {
         if (isAirportComplete && paymentSectionRef.current) {
             setTimeout(() => {
-                paymentSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 100);
+                paymentSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
         }
     }
   }, [isAirportComplete, step]);
@@ -192,6 +170,31 @@ const FloatingBookingEngine = ({
     newStops[index] = event.target.value;
     setAddStops(newStops);
     shouldFetchStops.current[index] = true;
+  };
+
+  // Form validation for Step 3
+  const isFormComplete = () => {
+    // Check if airport details are required and filled
+    if (activeItem === 'airport' && isScheduled) {
+      if (!airportData.flightNumber || !airportData.meetTime) return false;
+    }
+
+    // Check if payment method is selected
+    if (!paymentMethod) return false;
+
+    // Check if auth mode is selected
+    if (!authMode) return false;
+
+    // Check auth fields based on mode
+    if (authMode === 'login') {
+      if (!authData.mobile || !authData.password) return false;
+    } else if (authMode === 'register') {
+      if (!authData.name || !authData.mobile || !authData.email || !authData.password) return false;
+    } else if (authMode === 'guest') {
+      if (!authData.name || !authData.mobile || !authData.email) return false;
+    }
+
+    return true;
   };
 
   // --- Autocomplete Logic (Duplicated/Shared from BookingForm) ---
@@ -361,7 +364,7 @@ const FloatingBookingEngine = ({
                                             type="text" 
                                             value={pickup} 
                                             onChange={handlePickupChange}
-                                            placeholder='Airport,Station,Postcode e.g'
+                                            placeholder='Airport, Station, Postcode e.g'
                                             className="w-full p-3 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-700"
                                             autoComplete="off"
                                             required
@@ -391,7 +394,7 @@ const FloatingBookingEngine = ({
                                          value={addStops[index] || ''} 
                                          onChange={(e) => handleAddstopChange(e, index)} 
                                          className="block w-full text-sm text-gray-900 bg-white rounded border border-gray-300 p-2 outline-none focus:ring-1 focus:ring-blue-500" 
-                                         placeholder={`Airport,Station,Postcode e.g`} 
+                                         placeholder={`Airport, Station, Postcode e.g`} 
                                          autoComplete="off"
                                      />
                                      <button type="button" onClick={() => handleRemoveField(index)} className="border-none text-gray-400 hover:text-red-500 transition-colors flex items-center justify-center">
@@ -418,7 +421,7 @@ const FloatingBookingEngine = ({
                                             type="text" 
                                             value={destination} 
                                             onChange={handleDestinationChange}
-                                            placeholder='Airport,Station,Postcode e.g'
+                                            placeholder='Airport, Station, Postcode e.g'
                                             className="w-full p-3 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-700"
                                             autoComplete="off"
                                             required
@@ -470,7 +473,7 @@ const FloatingBookingEngine = ({
                             </div>
                         )}
 
-                         <div ref={tripTypeRef} className="flex items-center gap-4 pt-2">
+                         <div ref={tripTypeRef} className="flex items-center gap-4 pt-2 pl-2">
                             <label className="flex items-center cursor-pointer">
                                 <input type="radio" name="tripType" value="oneway" checked={selectedRadio === 'oneway'} onChange={() => setSelectedRadio('oneway')} className="form-radio h-4 w-4 text-[#193e89]" />
                                 <span className="ml-2 text-sm text-gray-700">One way</span>
@@ -634,56 +637,36 @@ const FloatingBookingEngine = ({
                     <hr className="border-gray-400" />
 
                     {/* Airport Details Section (Conditional) */}
-                    {activeItem === 'airport' && (
+                    {activeItem === 'airport' && isScheduled && (
                         <div className="pt-1 animate-in fade-in slide-in-from-top-2 duration-300">
                             <h3 className="text-lg font-bold text-gray-800 mb-4 px-1">Airport details</h3>
-                            <div className="grid grid-cols-3 gap-3 px-1 mb-4">
+                            <div className="grid grid-cols-2 gap-3 px-1">
                                 <div>
-                                    <label className="block text-[12px] font-semibold text-gray-500 mb-1">Airline</label>
-                                    <input 
-                                        type="text" 
-                                        name="airline"
-                                        value={airportData.airline}
-                                        onChange={handleAirportChange}
-                                        className="w-full p-2 bg-white border border-gray-300 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89]" 
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-[12px] font-semibold text-gray-500 mb-1">Flight Number</label>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Flight Number</label>
                                     <input 
                                         type="text" 
                                         name="flightNumber"
                                         value={airportData.flightNumber}
                                         onChange={handleAirportChange}
-                                        className="w-full p-2 bg-white border border-gray-300 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89]" 
+                                        className="w-full p-2.5 bg-white border border-gray-300 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89]" 
+                                        placeholder="e.g. BA123"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-[12px] font-semibold text-gray-500 mb-1">Arriving From</label>
-                                    <input 
-                                        type="text" 
-                                        name="arrivingFrom"
-                                        value={airportData.arrivingFrom}
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Meet you</label>
+                                    <select 
+                                        name="meetTime"
+                                        value={airportData.meetTime}
                                         onChange={handleAirportChange}
-                                        className="w-full p-2 bg-white border border-gray-300 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89]" 
-                                    />
+                                        className="w-full p-2.5 bg-white border border-gray-300 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89] appearance-none cursor-pointer"
+                                    >
+                                        <option value="">Please select</option>
+                                        <option value="15">15 Minutes</option>
+                                        <option value="30">30 Minutes</option>
+                                        <option value="45">45 Minutes</option>
+                                        <option value="60">60 Minutes</option>
+                                    </select>
                                 </div>
-                            </div>
-                            <div className="px-1">
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">How long after landing should the driver meet you?</label>
-                                <select 
-                                    name="meetTime"
-                                    value={airportData.meetTime}
-                                    onChange={handleAirportChange}
-                                    className="w-full p-2 bg-white border border-gray-300 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89] appearance-none cursor-pointer"
-                                >
-                                    <option value="">Please select</option>
-                                    <option value="0">Immediately</option>
-                                    <option value="15">15 Minutes</option>
-                                    <option value="30">30 Minutes</option>
-                                    <option value="45">45 Minutes</option>
-                                    <option value="60">60 Minutes</option>
-                                </select>
                             </div>
                         </div>
                     )}
@@ -771,9 +754,9 @@ const FloatingBookingEngine = ({
                         </div>
                     )}
 
-<hr className="border-gray-400" />
+                    {isAirportComplete && <hr className="border-gray-400" />}
 
-                    {showAuthSection && (
+                    {isAirportComplete && showAuthSection && (
                         <div ref={authSectionRef} className="pt-2 animate-in fade-in slide-in-from-top-2 duration-300">
                             <h3 className="text-center text-lg font-bold text-gray-800 mb-4 tracking-wide">Passenger information</h3>
                             
@@ -801,48 +784,30 @@ const FloatingBookingEngine = ({
                                 {authMode === 'login' && (
                                     <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
                                         <input ref={nameRef} type="text" name="mobile" placeholder="Mobile Number" value={authData.mobile} onChange={handleAuthChange} className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89] transition-all" required />
-                                        {authData.mobile && (
-                                            <div ref={passwordRef} className="animate-in fade-in slide-in-from-top-2 duration-300">
-                                                <input type="password" name="password" placeholder="Password" value={authData.password} onChange={handleAuthChange} className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89] transition-all" required />
-                                            </div>
-                                        )}
+                                        <input type="password" name="password" placeholder="Password" value={authData.password} onChange={handleAuthChange} className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89] transition-all" required />
+                                        <div className="text-right">
+                                            <button 
+                                                type="button"
+                                                className="border-none text-xs text-[#193d89] hover:text-[#142954] font-semibold transition-colors"
+                                            >
+                                                Forgot password?
+                                            </button>
+                                        </div>
                                     </div>
                                 )}
                                 {authMode === 'register' && (
                                     <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
                                         <input ref={nameRef} type="text" name="name" placeholder="Name" value={authData.name} onChange={handleAuthChange} className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89] transition-all" required />
-                                        {authData.name && (
-                                            <div ref={phoneRef} className="animate-in fade-in slide-in-from-top-2 duration-300">
-                                                <input type="text" name="mobile" placeholder="Number" value={authData.mobile} onChange={handleAuthChange} className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89] transition-all" required />
-                                            </div>
-                                        )}
-                                        {authData.mobile && (
-                                            <div ref={emailRef} className="animate-in fade-in slide-in-from-top-2 duration-300">
-                                                <input type="email" name="email" placeholder="Email" value={authData.email} onChange={handleAuthChange} className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89] transition-all" required />
-                                            </div>
-                                        )}
-                                        {authData.email && (
-                                            <div ref={passwordRef} className="animate-in fade-in slide-in-from-top-2 duration-300">
-                                                <input type="password" name="password" placeholder="Password" value={authData.password} onChange={handleAuthChange} className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89] transition-all" required />
-                                            </div>
-                                        )}
+                                        <input type="text" name="mobile" placeholder="Number" value={authData.mobile} onChange={handleAuthChange} className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89] transition-all" required />
+                                        <input type="email" name="email" placeholder="Email" value={authData.email} onChange={handleAuthChange} className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89] transition-all" required />
+                                        <input type="password" name="password" placeholder="Password" value={authData.password} onChange={handleAuthChange} className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89] transition-all" required />
                                     </div>
                                 )}
                                 {authMode === 'guest' && (
                                     <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
                                         <input ref={nameRef} type="text" name="name" placeholder="Name" value={authData.name} onChange={handleAuthChange} className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89] transition-all" required />
-                                        
-                                        {authData.name && (
-                                            <div ref={phoneRef} className="animate-in fade-in slide-in-from-top-2 duration-300">
-                                                <input type="text" name="mobile" placeholder="Number" value={authData.mobile} onChange={handleAuthChange} className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89] transition-all" required />
-                                            </div>
-                                        )}
-
-                                        {authData.mobile && (
-                                            <div ref={emailRef} className="animate-in fade-in slide-in-from-top-2 duration-300">
-                                                <input type="email" name="email" placeholder="Email" value={authData.email} onChange={handleAuthChange} className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89] transition-all" required />
-                                            </div>
-                                        )}
+                                        <input type="text" name="mobile" placeholder="Number" value={authData.mobile} onChange={handleAuthChange} className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89] transition-all" required />
+                                        <input type="email" name="email" placeholder="Email" value={authData.email} onChange={handleAuthChange} className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-[#193d89] transition-all" required />
                                     </div>
                                 )}
                             </div>
@@ -855,9 +820,9 @@ const FloatingBookingEngine = ({
                     <button 
                         type="button"
                         onClick={handleFormSubmit}
-                        disabled={!authMode}
+                        disabled={!isFormComplete()}
                         className={`w-full font-bold py-3.5 rounded-xl shadow-[0_4px_15px_rgba(125,191,0,0.3)] transition-all text-lg active:scale-[0.98]
-                            ${authMode ? 'bg-[#7DBF00] hover:bg-[#6ca500] text-white' : 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'}`}
+                            ${isFormComplete() ? 'bg-[#7DBF00] hover:bg-[#6ca500] text-white' : 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'}`}
                     >
                         Lets Go
                     </button>
