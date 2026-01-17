@@ -25,7 +25,7 @@ export default function NewDesign() {
              />
         </div>
         
-        <div className="absolute top-20 left-4 md:left-12 z-10 w-auto max-w-[calc(100vw-2rem)] md:max-w-md">
+        <div className="absolute top-[50px] md:top-20 left-4 md:left-12 z-10 w-full md:w-auto max-w-[calc(100vw-2rem)] md:max-w-md">
              <FloatingBookingEngine 
                 pickup={pickup} 
                 setPickup={setPickup} 

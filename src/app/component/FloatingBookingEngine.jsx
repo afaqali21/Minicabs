@@ -149,6 +149,21 @@ const FloatingBookingEngine = ({
   }, [showAuthSection, step]);
 
   // --- Helpers ---
+  // Function to detect if an address is an airport
+  const isAirportAddress = (address) => {
+    if (!address) return false;
+    const addressLower = address.toLowerCase();
+    // Check for common airport keywords and UK airport names
+    const airportKeywords = [
+      'airport', 'terminal', 'heathrow', 'gatwick', 'stansted', 
+      'luton', 'manchester airport', 'birmingham airport', 'bristol airport',
+      'newcastle airport', 'glasgow airport', 'edinburgh airport',
+      'liverpool airport', 'east midlands airport', 'leeds bradford airport',
+      'airport terminal', 'airport road', 'runway'
+    ];
+    return airportKeywords.some(keyword => addressLower.includes(keyword));
+  };
+
   const handleItemClick = (itemId) => setActiveItem(itemId);
 
   const handleAddField = () => {
@@ -253,6 +268,29 @@ const FloatingBookingEngine = ({
     shouldFetchPickup.current = true;
   };
 
+  // Handler for when user finishes typing in pickup field
+  const handlePickupBlur = (e) => {
+    const address = e.target.value;
+    // Check if user typed an airport address while minicab is selected
+    if (activeItem === 'minicab' && address && isAirportAddress(address) && pickupSuggestions.length === 0) {
+      // Only show alert if address wasn't selected from suggestions (suggestions would be handled in selectSuggestion)
+      // Small delay to check if suggestions are about to appear
+      setTimeout(() => {
+        if (pickupSuggestions.length === 0) {
+          const userChoice = window.confirm(
+              "You've entered an airport address, but your service type is 'Minicab'.\n\n" +
+              "Airport bookings require the 'Airport' service type to ensure proper handling.\n\n" +
+              "Would you like to switch to 'Airport' service type now?\n\n" +
+              "Click OK to switch, or Cancel to continue with Minicab."
+          );
+          if (userChoice) {
+              handleItemClick('airport');
+          }
+        }
+      }, 600); // Wait to see if user clicks a suggestion
+    }
+  };
+
   const handleDestinationChange = (e) => {
     setDestination(e.target.value);
     shouldFetchDest.current = true;
@@ -261,9 +299,30 @@ const FloatingBookingEngine = ({
   const selectSuggestion = (suggestion, type, index = null) => {
       const address = suggestion.display_name;
       if (type === 'pickup') {
-          shouldFetchPickup.current = false;
-          setPickup(address);
-          setPickupSuggestions([]);
+          // Check if user selected minicab but picked an airport address
+          if (activeItem === 'minicab' && isAirportAddress(address)) {
+              const userChoice = window.confirm(
+                  "You've selected an airport address, but your service type is 'Minicab'.\n\n" +
+                  "Airport bookings require the 'Airport' service type to ensure proper handling.\n\n" +
+                  "Would you like to switch to 'Airport' service type now?\n\n" +
+                  "Click OK to switch, or Cancel to continue with Minicab."
+              );
+              if (userChoice) {
+                  handleItemClick('airport');
+                  // Still set the pickup address
+                  shouldFetchPickup.current = false;
+                  setPickup(address);
+                  setPickupSuggestions([]);
+              } else {
+                  // User chose to continue with minicab, so don't set the airport address
+                  setPickupSuggestions([]);
+                  return;
+              }
+          } else {
+              shouldFetchPickup.current = false;
+              setPickup(address);
+              setPickupSuggestions([]);
+          }
       } else if (type === 'destination') {
           shouldFetchDest.current = false;
           setDestination(address);
@@ -302,11 +361,11 @@ const FloatingBookingEngine = ({
     
     // Save and Redirect
     localStorage.setItem('bookingData', JSON.stringify(formData));
-    if (activeItem === 'airport') {
-        router.push('/airport-booking'); 
-    } else {
-        router.push('/simple-booking');
-    }
+    // if (activeItem === 'airport') {
+    //     router.push('/airport-booking'); 
+    // } else {
+    //     router.push('/simple-booking');
+    // }
   };
 
   const handleEditRide = () => {
@@ -315,7 +374,7 @@ const FloatingBookingEngine = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-2xl p-6 w-[500px] max-w-lg relative flex flex-col h-[600px]">
+    <div className="bg-white rounded-lg shadow-2xl p-4 md:p-6 w-full max-w-[calc(100vw-2rem)] md:w-[500px] md:max-w-lg relative flex flex-col h-[85vh] md:h-[600px] max-h-[600px]">
         {step === 1 ? (
             <div className="flex flex-col h-full">
                 {/* Service Type Tabs (Static Top) */}
@@ -364,6 +423,7 @@ const FloatingBookingEngine = ({
                                             type="text" 
                                             value={pickup} 
                                             onChange={handlePickupChange}
+                                            onBlur={handlePickupBlur}
                                             placeholder='Airport, Station, Postcode e.g'
                                             className="w-full p-3 border border-gray-300 rounded-md outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-700"
                                             autoComplete="off"
