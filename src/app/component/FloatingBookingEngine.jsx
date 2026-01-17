@@ -79,7 +79,7 @@ const FloatingBookingEngine = ({
         const basePrice = parseFloat(selectedCar?.promoPrice?.replace('£', '') || selectedCar?.price?.replace('£', '') || 0);
         const discount = basePrice * 0.1;
         setDiscountAmount(discount);
-        setAppliedPromo(promoInput.toUpperCase());
+        setAppliedPromo(promoInput.toUpperCase());   
         setShowPromoInput(false);
     } else {
         alert("Invalid promo code. Try 'SAVE10' for 10% off!");
@@ -590,7 +590,7 @@ const FloatingBookingEngine = ({
                 <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-4 mb-4">
                     {/* Journey Detail Header */}
                     <div className="flex justify-between items-center px-1">
-                        <h2 className="text-lg font-bold text-gray-700">Journey Detail</h2>
+                        <h2 className="text-lg font-bold text-gray-700">Journey detail</h2>
                         <button 
                             onClick={handleEditRide}
                             className="border-none text-sm font-semibold text-gray-400 flex items-center hover:text-[#193e89]"

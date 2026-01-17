@@ -115,6 +115,10 @@ const DateTimeSelector = ({ value, onChange, openOnMount }) => {
       )}
 
       <style jsx global>{`
+      .flatpickr-time.time24hr{
+        margin-left:0px !important;
+
+      }
         .flatpickr-calendar.inline {
             box-shadow: none !important;
             border: 1px solid #e5e7eb !important;
@@ -194,6 +198,9 @@ const DateTimeSelector = ({ value, onChange, openOnMount }) => {
             color: #193d89 !important;
             padding: 10px !important;
         }
+            .flatpickr-time{
+            padding-top:0px !important;
+            }
       `}</style>
     </div>
   );
